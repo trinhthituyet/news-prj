@@ -1,0 +1,31 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - esnet
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # RabbitMQ main port (AMQP)
+      - "15672:15672" # RabbitMQ management web interface
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  es_data: 
+  rabbitmq_data:
+    driver: local
+
+networks:
+  esnet:

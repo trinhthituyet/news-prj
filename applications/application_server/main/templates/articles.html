@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News Collector</title>
+</head>
+<body>
+    <h1>{% block title %} Welcome to US News {% endblock %}</h1>
+    <h1>Word Cloud Generator</h1>
+    
+    <button onclick="getWordCloud()">Generate WordCloud</button>
+    <img id="wordcloud_img" alt="WordCloud">
+    <script>
+        function getWordCloud() {
+            var articles = {{ articles | tojson }};
+            //console.log(articles);
+            
+            text = ""
+            for (let article of articles) {
+                //console.log(article)
+                text += article['_source']['title'] + " "
+            }
+            data = {'articles_title': text}
+            fetch('http://127.0.0.1:8088/wordcloud', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.blob())
+            .then(imageBlob => {
+                const imgElement = document.getElementById('wordcloud_img');
+                const imageObjectURL = URL.createObjectURL(imageBlob);
+                imgElement.src = imageObjectURL;
+            })
+            .catch(error => console.log('Error fetching image:', error));
+        }
+    </script>
+    {% for article in articles %}
+        <a href={{ article['_source']['url'] }}>
+            <h2>{{ article['_source']['title'] }}</h2>
+        </a>
+        <span class="badge badge-primary">{{ article['_source']['publishedAt'] }}</span>
+        <hr>
+    {% endfor %}
+</body>
+</html>
