@@ -1,8 +1,12 @@
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch, mock_open, MagicMock
 from datetime import datetime
 
-from applications.data_collector_server.main.data_collector_app import DataCollectorApp
+#with patch('applications.data_collector_server.main.data_collector_app.DataCollectorDB') as MockDataCollectorDB:
+with patch('components.data_collector.data_collector_db.DataCollectorDB') as MockDataCollectorDB:
+    MockDataCollectorDB.return_value = MagicMock()  
+
+    from applications.data_collector_server.main.data_collector_app import DataCollectorApp
 
 
 class TestDataCollectorApp(unittest.TestCase):
