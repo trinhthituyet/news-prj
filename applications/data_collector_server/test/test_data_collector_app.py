@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest.mock import patch, mock_open, MagicMock
 from datetime import datetime
@@ -34,6 +35,7 @@ class TestDataCollectorApp(unittest.TestCase):
     @patch('applications.data_collector_server.main.data_collector_app.DataCollectorApp.update_last_retrieve_day_to_file')
     @patch('applications.data_collector_server.main.data_collector_app.DataCollectorApp.get_last_retrieve_day_from_file', return_value='2024-09-15')
     @patch('applications.data_collector_server.main.data_collector_app.datetime')
+    @patch.dict(os.environ, {"API_KEY": "mocked-api-key"})
     def test_collect_data(self, mock_datetime, mock_get_last_day, mock_update_last_retrieve_day, mock_data_collector, mock_db):
         mock_now = datetime(2024, 9, 16)
         mock_datetime.now.return_value = mock_now
