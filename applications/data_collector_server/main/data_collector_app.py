@@ -47,8 +47,10 @@ class DataCollectorApp:
         print(res)
 
 def callback(ch, method, properties, body):
-    print(f" [x] Received {body.decode()}")
-    app.collect_data()
+    msg = body.decode()
+    print(f" [x] Received {msg}")
+    if msg == "":
+        app.collect_data()
     print(" [x] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)        
 
