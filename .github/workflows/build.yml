@@ -29,6 +29,5 @@ jobs:
 
     - name: Run tests
       run: |
-        cd ../../
         pwd
         python -m unittest discover
