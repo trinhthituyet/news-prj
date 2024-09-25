@@ -4,8 +4,8 @@ from unittest.mock import patch, MagicMock
 from flask import Flask
 from applications.application_server.main.main_server import app
 
-sys.path.insert(0, os.path.abspath("."))
-print(os.path.abspath("."))
+#sys.path.insert(0, os.path.abspath("."))
+#print(os.path.abspath("."))
 
 class TestFlaskApp(unittest.TestCase):
 
