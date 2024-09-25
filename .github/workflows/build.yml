@@ -31,4 +31,4 @@ jobs:
       run: |
         pwd
         ls
-        python -m unittest discover
+        python -m unittest discover -t .
