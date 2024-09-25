@@ -30,4 +30,5 @@ jobs:
     - name: Run tests
       run: |
         pwd
+        ls
         python -m unittest discover
