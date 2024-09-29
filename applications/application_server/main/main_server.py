@@ -6,11 +6,15 @@ from flask import Flask, request, render_template
 sys.path.insert(0, os.path.abspath("."))
 print(os.path.abspath("."))
 
+from prometheus_flask_exporter import PrometheusMetrics
 from components.data_collector.data_collector_db import DataCollectorDB
 from applications.application_server.main.mq_worker import RabbitMQWorker
 
 app = Flask(__name__)
 app.secret_key = "tuyet"
+
+metrics = PrometheusMetrics(app)
+
 db_collector = DataCollectorDB("http://localhost:9200")
 
 mq_worker = RabbitMQWorker('localhost')
@@ -40,6 +44,13 @@ def search_articles_last_30_days():
 def collect_data():
     mq_worker.send_msg('collect')
     return '<h2>Sent message to data collector</h2>'
+
+@app.route("/send_data_msg_mq", methods=["POST"])
+def send_data_msg_mq():
+    data = request.get_json()
+    msg = data['msg']
+    mq_worker.send_msg(msg)
+    return '<h2>Sent message {msg} to rabbitmq</h2>'
     
 
 if __name__ == "__main__":

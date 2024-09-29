@@ -35,12 +35,21 @@ class DataCollectorApp:
         #print("current datetime: ", current_datetime)
         data_collector = DataCollector(api_key=api_key)
         source_ids = data_collector.get_list_of_sources(language='en', country='us')
-        data = data_collector.retrieve_data(from_date=last_date, source_list=source_ids)
-        #print(data)
-        self.collector_db.save_articles(data['articles'])
-        current_datetime_str = current_datetime.isoformat()
-        #os.environ['LAST_DAY_RETRIVED'] = current_datetime_str
-        self.update_last_retrieve_day_to_file(current_datetime_str)
+        status, data = data_collector.retrieve_data(from_date=last_date, source_list=source_ids)
+        if status == 'ok':
+            #print(data)
+            self.collector_db.save_articles(data)
+            current_datetime_str = current_datetime.isoformat()
+            #os.environ['LAST_DAY_RETRIVED'] = current_datetime_str
+            self.update_last_retrieve_day_to_file(current_datetime_str)
+            print('Collecting data successfully!')
+        else:
+            print('Error when collecting data!')
+            self.collector_db.save_articles(data)
+            current_datetime_str = current_datetime.isoformat()
+            #os.environ['LAST_DAY_RETRIVED'] = current_datetime_str
+            self.update_last_retrieve_day_to_file(current_datetime_str)
+            print('Collecting data successfully!')
 
     def search_text_on_title(self, text):
         res = self.collector_db.search_article_title(text)
@@ -49,7 +58,7 @@ class DataCollectorApp:
 def callback(ch, method, properties, body):
     msg = body.decode()
     print(f" [x] Received {msg}")
-    if msg == "":
+    if msg == "collect":
         app.collect_data()
     print(" [x] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)        
