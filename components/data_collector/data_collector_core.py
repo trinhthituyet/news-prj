@@ -30,12 +30,15 @@ class DataCollector:
             data_page = self.retrieve_data_page(from_date, source_list, page)
             print("page: ", page)
             print("data_page: ", data_page)
-            #if  data_page['status'] == 'ok':
-                #print("data: ", data_page['articles'])
+            if  data_page['status'] == 'ok':
+                print("data len: ", len(data_page['articles']))
                 
             if data_page['status'] == 'error':
                 print("Collecting error: ", data_page['message'])
-                return 'error', data
+                if 'Developer accounts are limited' in data_page['message']:
+                    return 'ok', data
+                else:
+                    return 'error', []
             elif len(data_page['articles']) == 0:
                 return 'ok', data
             else:
@@ -56,9 +59,12 @@ class DataCollector:
 
         response = requests.get(url, params=params)
         data = response.json()
+        if data['status'] == 'error':
+            print('get_list_of_sources error: ', data['message'])
+            return 'error', []
 
         source_ids = []
         for source in data['sources']:
             source_ids.append(source['id'])
 
-        return source_ids
+        return 'ok', source_ids

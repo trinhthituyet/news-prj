@@ -9,14 +9,13 @@ class TestDataCollector(unittest.TestCase):
         self.data_collector = DataCollector(self.api_key)
     
     @patch('requests.get')
-    def test_retrieve_data(self, mock_get):
+    def test_retrieve_data_page(self, mock_get):
         # Define the mock response
-        mock_response = {
-            'articles': [
+        mock_response = {'articles': [
                 {'title': 'AI is transforming the world', 'source': {'name': 'TechCrunch'}},
                 {'title': 'The future of AI', 'source': {'name': 'Wired'}}
-            ]
-        }
+            ]}
+       
         # Mock requests.get to return the mock_response
         mock_get.return_value.json.return_value = mock_response
 
@@ -24,7 +23,7 @@ class TestDataCollector(unittest.TestCase):
         source_list = 'techcrunch,wired'
         
         # Call the retrieve_data method
-        data = self.data_collector.retrieve_data(from_date, source_list)
+        data = self.data_collector.retrieve_data_page(from_date, source_list, 1)
         
         # Assertions
         self.assertEqual(len(data['articles']), 2)
@@ -37,7 +36,8 @@ class TestDataCollector(unittest.TestCase):
                 'sources': 'techcrunch,wired',
                 'language': 'en',
                 'sortBy': 'popularity',
-                'apiKey': self.api_key
+                'apiKey': self.api_key,
+                'page': 1
             }
         )
     
@@ -45,6 +45,7 @@ class TestDataCollector(unittest.TestCase):
     def test_get_list_of_sources(self, mock_get):
         # Define the mock response
         mock_response = {
+            'status': 'ok',
             'sources': [
                 {'id': 'techcrunch', 'name': 'TechCrunch'},
                 {'id': 'wired', 'name': 'Wired'}
@@ -54,9 +55,10 @@ class TestDataCollector(unittest.TestCase):
         mock_get.return_value.json.return_value = mock_response
 
         # Call the get_list_of_sources method
-        sources = self.data_collector.get_list_of_sources(language='en', category='technology')
+        status, sources = self.data_collector.get_list_of_sources(language='en', category='technology')
         
         # Assertions
+        self.assertEqual(status, 'ok')
         self.assertEqual(sources, ['techcrunch', 'wired'])
         self.assertEqual(mock_get.call_count, 1)
         mock_get.assert_called_with(

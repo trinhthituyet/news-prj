@@ -34,7 +34,9 @@ class DataCollectorApp:
         current_datetime = datetime.now()  - timedelta(days=1)
         #print("current datetime: ", current_datetime)
         data_collector = DataCollector(api_key=api_key)
-        source_ids = data_collector.get_list_of_sources(language='en', country='us')
+        status1, source_ids = data_collector.get_list_of_sources(language='en', country='us')
+        if status1 == 'error':
+            return
         status, data = data_collector.retrieve_data(from_date=last_date, source_list=source_ids)
         if status == 'ok':
             #print(data)
@@ -45,11 +47,6 @@ class DataCollectorApp:
             print('Collecting data successfully!')
         else:
             print('Error when collecting data!')
-            self.collector_db.save_articles(data)
-            current_datetime_str = current_datetime.isoformat()
-            #os.environ['LAST_DAY_RETRIVED'] = current_datetime_str
-            self.update_last_retrieve_day_to_file(current_datetime_str)
-            print('Collecting data successfully!')
 
     def search_text_on_title(self, text):
         res = self.collector_db.search_article_title(text)

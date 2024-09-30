@@ -41,8 +41,8 @@ class TestDataCollectorApp(unittest.TestCase):
         mock_datetime.now.return_value = mock_now
         
         mock_collector_instance = mock_data_collector.return_value
-        mock_collector_instance.get_list_of_sources.return_value = ['source1', 'source2']
-        mock_collector_instance.retrieve_data.return_value = {'articles': [{'title': 'Test Article'}]}
+        mock_collector_instance.get_list_of_sources.return_value = 'ok', ['source1', 'source2']
+        mock_collector_instance.retrieve_data.return_value = 'ok', [{'title': 'Test Article'}]
         
         app = DataCollectorApp(url='mock_url')
         app.collect_data()
