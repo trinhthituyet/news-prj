@@ -40,7 +40,6 @@ class DataCollectorDB:
     def save_articles(self, articles):
         actions = []
         for article in articles:
-            print("ARTICLE: ", article)
             article["source_id"] = article["source"]["id"]
             article["source_name"] = article["source"]["name"]
             del article["source"]

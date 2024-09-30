@@ -57,10 +57,8 @@ class DataCollectorApp:
 
 def callback(ch, method, properties, body):
     msg = body.decode()
-    print(f" [x] Received {msg}")
     if msg == "collect":
         app.collect_data()
-    print(" [x] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)        
 
 def init_mq_listener():

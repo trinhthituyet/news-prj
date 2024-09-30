@@ -28,9 +28,11 @@ class DataCollector:
         data = []
         while True:
             data_page = self.retrieve_data_page(from_date, source_list, page)
-            if  data_page['status'] == 'ok':
+            print("page: ", page)
+            print("data_page: ", data_page)
+            #if  data_page['status'] == 'ok':
                 #print("data: ", data_page['articles'])
-                print("page: ", page)
+                
             if data_page['status'] == 'error':
                 print("Collecting error: ", data_page['message'])
                 return 'error', data
