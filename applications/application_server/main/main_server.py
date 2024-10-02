@@ -43,7 +43,7 @@ def search_articles_last_30_days():
 @app.route("/collect_data", methods=["POST"])
 def collect_data():
     mq_worker.send_msg('collect')
-    return '<h2>Sent message to data collector</h2>'
+    return 'Sent message to data collector successfully'
 
 @app.route("/send_data_msg_mq", methods=["POST"])
 def send_data_msg_mq():

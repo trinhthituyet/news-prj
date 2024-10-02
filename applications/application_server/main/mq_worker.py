@@ -3,7 +3,7 @@ import pika
 class RabbitMQWorker:
     def __init__(self, host):
         connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=host))
+        pika.ConnectionParameters(host=host, heartbeat=300))
         self.channel = connection.channel()
 
         self.channel.queue_declare(queue='data_collector_queue', durable=True)

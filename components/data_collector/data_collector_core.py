@@ -26,8 +26,9 @@ class DataCollector:
     def retrieve_data(self, from_date, source_list):
         page = 1
         data = []
+        source_list_str = ",".join(source_list)
         while True:
-            data_page = self.retrieve_data_page(from_date, source_list, page)
+            data_page = self.retrieve_data_page(from_date, source_list_str, page)
             print("page: ", page)
             print("data_page: ", data_page)
             if  data_page['status'] == 'ok':

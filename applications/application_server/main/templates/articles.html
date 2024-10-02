@@ -18,7 +18,12 @@
             text = ""
             for (let article of articles) {
                 //console.log(article)
-                text += article['_source']['title'] + " "
+                title = article['_source']['title']
+                if (title.startsWith("WATCH:")){
+                    title = title.replace("WATCH:", "")
+                }
+
+                text += title + " "
             }
             data = {'articles_title': text}
             fetch('http://127.0.0.1:8088/wordcloud', {

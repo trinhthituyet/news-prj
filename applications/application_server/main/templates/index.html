@@ -32,7 +32,8 @@
                 console.log(msg)
                 const htmlNode = stringToHTML(msg);
                 console.log(htmlNode); // Logs the <h1> element node
-                document.getElementById("collect_data").appendChild(htmlNode);
+                //document.getElementById("collect_data").appendChild(htmlNode);
+                alert(msg)
             })
             .catch(error => console.log('Error fetching response:', error));
         }

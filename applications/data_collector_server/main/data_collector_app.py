@@ -35,6 +35,7 @@ class DataCollectorApp:
         #print("current datetime: ", current_datetime)
         data_collector = DataCollector(api_key=api_key)
         status1, source_ids = data_collector.get_list_of_sources(language='en', country='us')
+        print("source_ids: ", source_ids)
         if status1 == 'error':
             return
         status, data = data_collector.retrieve_data(from_date=last_date, source_list=source_ids)
