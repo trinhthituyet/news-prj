@@ -19,6 +19,18 @@ db_collector = DataCollectorDB("http://localhost:9200")
 
 mq_worker = RabbitMQWorker('localhost')
 
+def read_analyzer_ip():
+    with open('config.txt', 'r') as file:
+        lines = file.readlines()
+
+    for line in lines:
+            if line.startswith('DATA_ANALYZER_IP'):
+                analyzer_ip = line.strip().split('=')[1]
+                print("analyzer_ip: ", analyzer_ip)
+                return analyzer_ip
+            
+wordcloud_url = "http://" + read_analyzer_ip() + ":8088/wordcloud"   
+
 @app.route("/")
 def main():
     return render_template('index.html')
@@ -28,17 +40,17 @@ def search_articles():
     input_text = request.form.get("user_input", "")
     print("You entered: " + input_text)
     articles = db_collector.search_article_title(input_text)
-    return render_template("articles.html", articles = articles)
+    return render_template("articles.html", articles = articles, wordcloud_url = wordcloud_url)
 
 @app.route("/articles_last_7_days", methods=["POST"])
 def search_articles_last_7_days():
     articles = db_collector.search_article_last_n_days(7)
-    return render_template("articles.html", articles = articles)
+    return render_template("articles.html", articles = articles, wordcloud_url = wordcloud_url)
 
 @app.route("/articles_last_30_days", methods=["POST"])
 def search_articles_last_30_days():
     articles = db_collector.search_article_last_n_days(30)
-    return render_template("articles.html", articles = articles)
+    return render_template("articles.html", articles = articles, wordcloud_url = wordcloud_url)
 
 @app.route("/collect_data", methods=["POST"])
 def collect_data():

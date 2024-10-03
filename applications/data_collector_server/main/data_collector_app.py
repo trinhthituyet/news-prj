@@ -16,7 +16,7 @@ class DataCollectorApp:
         self.collector_db = DataCollectorDB(url)
 
     def get_last_retrieve_day_from_file(self):
-        with open('last_day_info.txt', 'r') as file:
+        with open('config.txt', 'r') as file:
             lines = file.readlines()
 
         for line in lines:
