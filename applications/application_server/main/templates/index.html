@@ -2,47 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Collector</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+
+        /* Form Styling */
+        form {
+            margin: 20px auto;
+            padding: 10px;
+            width: 90%;
+            max-width: 400px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Button Styling */
+        #collect_data button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #collect_data button:hover {
+            background-color: #218838;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            form {
+                width: 95%;
+            }
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome to US News</h1>
 
+    <!-- Search Form -->
     <form action="/search_articles" method="POST">
-        <input name="user_input">
+        <input name="user_input" type="text" placeholder="Enter search term">
         <input type="submit" value="Search">
     </form>
+
+    <!-- Collect Data Button -->
     <div id="collect_data">
-        <button onclick="collectData()">Collect Data</button>
+        <button onclick="collectData()">Collect Recent Data</button>
     </div>
-    
+
+    <!-- Last 7 and 30 Days Buttons -->
+    <form action="/articles_last_7_days" method="POST">
+        <input type="submit" value="News last 7 days">
+    </form>
+
+    <form action="/articles_last_30_days" method="POST">
+        <input type="submit" value="News last 30 days">
+    </form>
+
     <script>
         function stringToHTML(htmlString) {
             const template = document.createElement('template');
-            template.innerHTML = htmlString.trim(); // Set the inner HTML
-            return template.content.firstChild; // Extract the first node from the template
+            template.innerHTML = htmlString.trim(); 
+            return template.content.firstChild; 
         }
+
         function collectData() {
             fetch('/collect_data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
-                //body: JSON.stringify(data)
             })
             .then(response => response.text())
             .then(msg => {
-                console.log(msg)
+                console.log(msg);
                 const htmlNode = stringToHTML(msg);
-                console.log(htmlNode); // Logs the <h1> element node
-                //document.getElementById("collect_data").appendChild(htmlNode);
-                alert(msg)
+                alert(msg);
             })
             .catch(error => console.log('Error fetching response:', error));
         }
     </script>
-    <form action="/articles_last_7_days" method="POST">
-        <input type="submit" value="Last 7 days">
-    </form>
-    <form action="/articles_last_30_days" method="POST">
-        <input type="submit" value="Last 30 days">
-    </form>
 </body>
 </html>

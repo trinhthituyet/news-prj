@@ -2,30 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Collector</title>
+    <style>
+        /* Global Styles */
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Title and Headings */
+        h1 {
+            font-size: 2.0em;
+            color: #0056b3;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        /* Word Cloud Section */
+        .wordcloud-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .wordcloud-section button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .wordcloud-section button:hover {
+            background-color: #218838;
+        }
+
+        .wordcloud-section img {
+            margin-top: 20px;
+            max-width: 90%;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Article Links */
+        .article-list {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .article-list a {
+            text-decoration: none;
+            color: #0056b3;
+        }
+
+        .article-list a:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 1.0em;
+            /*background-color: #007bff;*/
+            color: black;
+            border-radius: 5px;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #ddd;
+        }
+    </style>
 </head>
 <body>
+    <!-- Block for Title -->
     <h1>{% block title %} Welcome to US News {% endblock %}</h1>
-    <h1>Word Cloud Generator</h1>
-    
-    <button onclick="getWordCloud()">Generate WordCloud</button>
-    <img id="wordcloud_img" alt="WordCloud">
+
+    <!-- Word Cloud Section -->
+    <div class="wordcloud-section">
+        <button onclick="getWordCloud()">Generate Word Cloud</button>
+        <img id="wordcloud_img" alt="Word Cloud">
+    </div>
+
     <script>
         function getWordCloud() {
+            // Fetch the articles from the backend using Jinja's tojson filter
             var articles = {{ articles | tojson }};
-            //console.log(articles);
             
-            text = ""
+            let text = "";
             for (let article of articles) {
-                //console.log(article)
-                title = article['_source']['title']
-                if (title.startsWith("WATCH:")){
-                    title = title.replace("WATCH:", "")
+                let title = article['_source']['title'];
+                if (title.startsWith("WATCH:")) {
+                    title = title.replace("WATCH:", "");
                 }
-
-                text += title + " "
+                text += title + " ";
             }
-            data = {'articles_title': text}
+            const data = {'articles_title': text};
+
             fetch('http://127.0.0.1:8088/wordcloud', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -40,12 +127,16 @@
             .catch(error => console.log('Error fetching image:', error));
         }
     </script>
-    {% for article in articles %}
-        <a href={{ article['_source']['url'] }}>
-            <h2>{{ article['_source']['title'] }}</h2>
-        </a>
-        <span class="badge badge-primary">{{ article['_source']['publishedAt'] }}</span>
-        <hr>
-    {% endfor %}
+
+    <!-- Article List -->
+    <div class="article-list">
+        {% for article in articles %}
+            <a href="{{ article['_source']['url'] }}" target="_blank">
+                <h2>{{ article['_source']['title'] }}</h2>
+            </a>
+            <span class="badge">{{ article['_source']['publishedAt'] }}</span>
+            <hr>
+        {% endfor %}
+    </div>
 </body>
 </html>
