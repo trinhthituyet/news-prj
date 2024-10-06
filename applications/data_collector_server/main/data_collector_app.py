@@ -25,7 +25,7 @@ class DataCollectorApp:
                     return last_day
                 
     def update_last_retrieve_day_to_file(self, last_day):
-        with open('config.txt.txt', 'w') as file:
+        with open('config.txt', 'w') as file:
             file.write(f'LAST_DAY_RETRIVED={last_day}\n')
 
     def collect_data(self):
