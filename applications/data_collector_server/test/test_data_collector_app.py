@@ -26,7 +26,7 @@ class TestDataCollectorApp(unittest.TestCase):
     def test_update_last_retrieve_day_to_file(self, mock_db, mock_file):
         app = DataCollectorApp(url='mock_url')
         app.update_last_retrieve_day_to_file('2024-09-16')
-        mock_file.assert_called_once_with('last_day_info.txt', 'w')
+        mock_file.assert_called_once_with('config.txt', 'w')
         mock_file().write.assert_called_once_with('LAST_DAY_RETRIVED=2024-09-16\n')
 
 
