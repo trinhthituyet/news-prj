@@ -18,7 +18,7 @@ class TestDataCollectorApp(unittest.TestCase):
         app = DataCollectorApp(url='mock_url')
         last_day = app.get_last_retrieve_day_from_file()
         self.assertEqual(last_day, '2024-09-15')
-        mock_file.assert_called_once_with('last_day_info.txt', 'r')
+        mock_file.assert_called_once_with('config.txt', 'r')
     
 
     @patch('builtins.open', new_callable=mock_open)
