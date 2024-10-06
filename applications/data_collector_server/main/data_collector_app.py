@@ -25,11 +25,11 @@ class DataCollectorApp:
                     return last_day
                 
     def update_last_retrieve_day_to_file(self, last_day):
-        with open('last_day_info.txt', 'w') as file:
+        with open('config.txt.txt', 'w') as file:
             file.write(f'LAST_DAY_RETRIVED={last_day}\n')
 
     def collect_data(self):
-        api_key = os.environ['API_KEY']
+        api_key = os.environ.get('API_KEY', '')
         last_date = self.get_last_retrieve_day_from_file()
         current_datetime = datetime.now()  - timedelta(days=1)
         #print("current datetime: ", current_datetime)
