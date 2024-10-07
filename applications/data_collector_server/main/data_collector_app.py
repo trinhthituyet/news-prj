@@ -1,4 +1,5 @@
 import os, sys
+import re
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import pika
@@ -20,13 +21,21 @@ class DataCollectorApp:
             lines = file.readlines()
 
         for line in lines:
-                if line.startswith('LAST_DAY_RETRIVED'):
+                if line.startswith('LAST_DAY_RETRIEVED'):
                     last_day = line.strip().split('=')[1]
                     return last_day
                 
     def update_last_retrieve_day_to_file(self, last_day):
+        with open('config.txt', 'r') as file:
+            lines = file.readlines()
+        for i, line in enumerate(lines):
+            if line.startswith('LAST_DAY_RETRIEVED'):
+                #lines[i] = re.sub(r'LAST_DAY_RETRIEVED=\d{4}-\d{2}-\d{2}', f'LAST_DAY_RETRIEVED={last_day}', line)
+                lines[i] = f'LAST_DAY_RETRIEVED={last_day}\n'
+
+
         with open('config.txt', 'w') as file:
-            file.write(f'LAST_DAY_RETRIVED={last_day}\n')
+            file.writelines(lines)
 
     def collect_data(self):
         api_key = os.environ.get('API_KEY', '')
