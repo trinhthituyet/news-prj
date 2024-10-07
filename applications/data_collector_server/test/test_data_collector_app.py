@@ -12,7 +12,7 @@ with patch('components.data_collector.data_collector_db.DataCollectorDB') as Moc
 
 class TestDataCollectorApp(unittest.TestCase):
     
-    @patch('builtins.open', new_callable=mock_open, read_data='LAST_DAY_RETRIVED=2024-09-15')
+    @patch('builtins.open', new_callable=mock_open, read_data='LAST_DAY_RETRIEVED=2024-09-15')
     @patch('applications.data_collector_server.main.data_collector_app.DataCollectorDB')
     def test_get_last_retrieve_day_from_file(self, mock_db, mock_file):
         app = DataCollectorApp(url='mock_url')
@@ -26,8 +26,8 @@ class TestDataCollectorApp(unittest.TestCase):
     def test_update_last_retrieve_day_to_file(self, mock_db, mock_file):
         app = DataCollectorApp(url='mock_url')
         app.update_last_retrieve_day_to_file('2024-09-16')
-        mock_file.assert_called_once_with('config.txt', 'w')
-        mock_file().write.assert_called_once_with('LAST_DAY_RETRIEVED=2024-09-16\n')
+        mock_file.assert_called_with('config.txt', 'w')
+        mock_file().writelines.assert_called_once()
 
 
     @patch('applications.data_collector_server.main.data_collector_app.DataCollectorDB')

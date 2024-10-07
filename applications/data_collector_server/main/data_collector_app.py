@@ -1,5 +1,4 @@
 import os, sys
-import re
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import pika
